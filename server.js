@@ -1,5 +1,6 @@
 // Setup empty JS object to act as endpoint for all routes
-projectData = {};
+projectData = {
+};
 
 // Require Express to run server and routes
 const express = require('express');
@@ -23,9 +24,22 @@ app.use(express.static('website'));
 
 // Setup Server
 const port = 8000;
+app.listen(port, () =>
+    console.log(`server running : open http://localhost:${port}`)
+);
 
-const server = app.listen(port, listening);
+//GET
+app.get('/GET', (req, res) =>
+    res.send(projectData));
 
-function listening(){
-    console.log(`running on localhost: ${port}`);
+//POST
+app.post('/POST', (req, res) => {
+    const body = req.body;
+    const newData = {};
+    newData['id'] = projectData.weather.length + 1;
+    Object.assign(newData, body);
+    projectData.weather.push(newData);
+
+    res.status(200).json(projectData);
 }
+);

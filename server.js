@@ -31,15 +31,16 @@ app.listen(port, () =>
 //GET
 app.get('/GET', (req, res) =>
     res.send(projectData));
+console.log("get projectData:" + JSON.stringify(projectData));
 
 //POST
 app.post('/POST', (req, res) => {
     const body = req.body;
-    const newData = {};
-    newData['id'] = projectData.weather.length + 1;
-    Object.assign(newData, body);
-    projectData.weather.push(newData);
+    projectData.temp = req.body.temp;
+    projectData.date = req.body.date;
+    projectData.content = req.body.content;
 
+    console.log("post projectData:" + JSON.stringify(projectData));
     res.status(200).json(projectData);
 }
 );

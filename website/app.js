@@ -1,5 +1,5 @@
 /* Global Variables */
-const API_KEY = '&appid=9d62ae32f784a32322ec2290b6c9d837';
+const API_KEY = '&appid=9d62ae32f784a32322ec2290b6c9d837&units=imperial';
 const API_URL = 'http://api.openweathermap.org/data/2.5/weather?zip=';
 const port = 8000;
 
@@ -14,11 +14,11 @@ const performAction = async (e) => {
 
   let wetherdata = await getWeather(API_URL, zipCode, API_KEY);
   let temp = wetherdata.main.temp;
-  const data = [{
+  const data = {
     date,
     temp,
     content,
-  }]
+  }
 
   await postData(`http://localhost:${port}/POST`, data);
 
@@ -31,7 +31,7 @@ const getWeather = async (baseURL, zipcode, apikey) => {
   const res = await fetch(baseURL + zipcode + apikey)
   try {
     const data = await res.json();
-    console.log(data)
+    console.log(data);
     return data;
   } catch (error) {
     console.log("error", error);
@@ -49,7 +49,7 @@ const postData = async (url = '', data = {}) => {
   });
 
   try {
-    const newData = await response.json();
+    let newData = await response.json();
     return newData;
   } catch (error) {
     console.log("error", error);
@@ -74,24 +74,23 @@ const datahead = [{ date: 'date', temperature: 'temp', feeling: 'content' }];
 const keys = Object.keys(datahead[0]);
 
 function generateTableBody(table, data) {
-  for (let element of data) {
     let row = table.insertRow();
-    for (let key in element) {
+    for (let key in data) {
       let cell = row.insertCell();
-      let td = document.createTextNode(element[key]);
+      let td = document.createTextNode(data[key]);
       cell.appendChild(td);
     }
   }
-}
+
 
 // Async GET
-const retrieveData = async (url = '') => {
+const retrieveData = async (url) => {
   const request = await fetch(url);
   try {
     // Transform into JSON
     const allData = await request.json();
-    console.log(allData);
-    return allData;
+    console.log("retrieveData allData:"+allData);
+    generateTableBody(tableUI,allData);
   }
   catch (error) {
     console.log("error", error);
